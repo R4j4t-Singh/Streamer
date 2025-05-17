@@ -24,4 +24,20 @@ const loginWithGoogle = async (req, res) => {
     .json(sessionToken);
 };
 
-export { loginWithGoogle };
+const getUser = async (req, res) => {
+  return res.status(200).json({
+    user: {
+      id: req.userId,
+      name: req.userName,
+      email: req.userEmail,
+    },
+  });
+};
+
+const logout = async (req, res) => {
+  return res.status(200).clearCookie("sessionToken").json({
+    message: "Logged out",
+  });
+};
+
+export { loginWithGoogle, getUser, logout };
