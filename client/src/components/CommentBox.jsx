@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import commentService from "../backend/commentService";
+import { useSelector } from "react-redux";
 
 const socket = io("http://localhost:3000");
 
 function CommentBox() {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
+  const user = useSelector((state) => state.authReducer.user);
 
   useEffect(() => {
     socket.on("new-comment", (comment) => {
@@ -19,7 +21,8 @@ function CommentBox() {
     };
   }, []);
 
-  const postComment = async () => {
+  const postComment = async (event) => {
+    event.preventDefault();
     const status = await commentService.postComment(comment);
     console.log(status);
     setComment("");
@@ -38,7 +41,7 @@ function CommentBox() {
             <div key={new_comment.id} className="text-black p-2 bg-gray-200">
               <span className="flex">
                 <div className="min-w-5/6 max-w-5/6 flex space-x-8">
-                  <p className=" font-bold">Rajat</p>
+                  <p className=" font-bold">{user.name}</p>
                   <p>{new_comment.comment}</p>
                 </div>
                 <p className="justify-end items-end  italic">
@@ -48,7 +51,7 @@ function CommentBox() {
             </div>
           ))}
         </div>
-        <div className="flex justify-between p-2">
+        <form className="flex justify-between p-2" onSubmit={postComment}>
           <input
             value={comment}
             className="w-full justify-end border-1 px-4 py-2 rounded-xl"
@@ -57,14 +60,10 @@ function CommentBox() {
               setComment(event.target.value);
             }}
           />
-          <button
-            type="submit"
-            className="p-2 bg-blue-500 mx-2 rounded"
-            onClick={postComment}
-          >
+          <button type="submit" className="p-2 bg-blue-500 mx-2 rounded">
             Post
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
