@@ -41,7 +41,7 @@ function CommentBox() {
             <div key={new_comment.id} className="text-black p-2 bg-gray-200">
               <span className="flex">
                 <div className="min-w-5/6 max-w-5/6 flex space-x-8">
-                  <p className=" font-bold">{user.name}</p>
+                  <p className=" font-bold">{new_comment.userName}</p>
                   <p>{new_comment.comment}</p>
                 </div>
                 <p className="justify-end items-end  italic">
