@@ -17,4 +17,6 @@ model Comment {
   id        String   @id @default(uuid())
   comment   String
   timestamp DateTime @default(now())
+  userId   String
+  userName  String
 }

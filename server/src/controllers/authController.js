@@ -21,7 +21,6 @@ const loginWithGoogle = async (req, res) => {
     .status(200)
     .cookie("sessionToken", sessionToken, cookieOptions)
     .redirect("http://localhost:5173")
-    .json(sessionToken);
 };
 
 const getUser = async (req, res) => {

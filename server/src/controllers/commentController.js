@@ -9,12 +9,18 @@ const consumer = kafka.consumer({ groupId: "user-group" });
 const postComment = async (req, res) => {
   const { comment } = req.body;
 
+  const message = {
+    comment,
+    userId: req.userId,
+    userName: req.userName,
+  };
+
   // kafka producer
   await producer.connect();
 
   await producer.send({
     topic: "streamer-comments",
-    messages: [{ value: comment }],
+    messages: [{ value: JSON.stringify(message) }],
   });
 
   await producer.disconnect();
@@ -34,12 +40,14 @@ const getComments = async (req, res) => {
 
   await consumer.run({
     eachMessage: async ({ message }) => {
-      const comment = message.value.toString();
-      console.log("Consuming ->", comment);
+      const data = JSON.parse(message.value.toString());
+      console.log("Consuming ->", data);
 
       const savedComment = await prisma.comment.create({
         data: {
-          comment: comment,
+          comment: data.comment,
+          userId: data.userId,
+          userName: data.userName
         },
       });
 
