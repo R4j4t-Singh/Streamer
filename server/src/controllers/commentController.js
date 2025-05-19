@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import kafka from "../kafka.js";
 import { emitComment } from "../socketHandler.js";
 import connectDB from "../db/db.js";
