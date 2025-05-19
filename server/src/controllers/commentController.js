@@ -1,10 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import kafka from "../kafka.js";
 import { emitComment } from "../socketHandler.js";
+import connectDB from "../db/db.js";
+import Comment from "../model/Comment.js";
 
 const prisma = new PrismaClient();
 const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: "user-group" });
+
+await connectDB();
 
 const postComment = async (req, res) => {
   const { comment } = req.body;
@@ -43,12 +47,10 @@ const getComments = async (req, res) => {
       const data = JSON.parse(message.value.toString());
       console.log("Consuming ->", data);
 
-      const savedComment = await prisma.comment.create({
-        data: {
-          comment: data.comment,
-          userId: data.userId,
-          userName: data.userName
-        },
+      const savedComment = await Comment.create({
+        comment: data.comment,
+        userId: data.userId,
+        userName: data.userName,
       });
 
       emitComment(savedComment);
