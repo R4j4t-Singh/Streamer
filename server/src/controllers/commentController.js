@@ -3,7 +3,6 @@ import { emitComment } from "../socketHandler.js";
 import connectDB from "../db/db.js";
 import Comment from "../model/Comment.js";
 
-const prisma = new PrismaClient();
 const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: "user-group" });
 
