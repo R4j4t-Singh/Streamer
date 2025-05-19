@@ -29,8 +29,12 @@ function CommentBox() {
   };
 
   const getTime = (timestamp) => {
+    console.log(timestamp);
+
     const date = new Date(timestamp);
-    return date.toLocaleTimeString();
+    const hour = date.getHours();
+    const minutes = date.getMinutes();
+    return hour + ":" + minutes;
   };
 
   return (
@@ -38,14 +42,14 @@ function CommentBox() {
       <div className="bg-gray-200 rounded-xl h-4/5 m-2">
         <div className="space-y-2 p-4 min-h-7/8">
           {comments.map((new_comment) => (
-            <div key={new_comment.id} className="text-black p-2 bg-gray-200">
+            <div key={new_comment._id} className="text-black p-2 bg-gray-200">
               <span className="flex">
                 <div className="min-w-5/6 max-w-5/6 flex space-x-8">
                   <p className=" font-bold">{new_comment.userName}</p>
                   <p>{new_comment.comment}</p>
                 </div>
                 <p className="justify-end items-end  italic">
-                  {getTime(new_comment.timestamp)}
+                  {getTime(new_comment.createdAt)}
                 </p>
               </span>
             </div>
