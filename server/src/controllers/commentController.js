@@ -31,8 +31,19 @@ const postComment = async (req, res) => {
 };
 
 const getComments = async (req, res) => {
-  const result = await prisma.comment.findMany();
-  return res.status(200).json(result);
+  const beforeId = req.query?.beforeId;
+
+  let comments;
+  if (beforeId) {
+    comments = await Comment.find({
+      _id: { $lt: beforeId },
+    })
+      .sort({ _id: -1 })
+      .limit(20);
+  } else {
+    comments = comments = await Comment.find().sort({ _id: -1 }).limit(10);
+  }
+  return res.status(200).json(comments);
 };
 
 // kafka consumer
