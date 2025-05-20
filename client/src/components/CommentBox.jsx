@@ -1,19 +1,38 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import commentService from "../backend/commentService";
-import { useSelector } from "react-redux";
+import { useRef } from "react";
 
 const socket = io("http://localhost:3000");
 
 function CommentBox() {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
-  const user = useSelector((state) => state.authReducer.user);
+  const scrollRef = useRef(null);
+  const [lastCommentId, setLastCommentId] = useState("");
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
+    (async () => {
+      const oldComments = await commentService.getComments();
+      oldComments.reverse();
+      setComments(oldComments);
+
+      if (oldComments?.length > 0) {
+        setLastCommentId(oldComments[0]._id);
+      }
+
+      requestAnimationFrame(() => {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      });
+    })();
+
     socket.on("new-comment", (comment) => {
       console.log(comment);
       setComments((comments) => [...comments, comment]);
+      requestAnimationFrame(() => {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      });
     });
 
     return () => {
@@ -29,7 +48,7 @@ function CommentBox() {
   };
 
   const getTime = (timestamp) => {
-    console.log(timestamp);
+    // console.log(timestamp); TODO
 
     const date = new Date(timestamp);
     const hour = date.getHours();
@@ -37,10 +56,37 @@ function CommentBox() {
     return hour + ":" + minutes;
   };
 
+  const handleScroll = async () => {
+    const container = scrollRef.current;
+
+    if (!container || !hasMore) return;
+
+    if (container.scrollTop < 50) {
+      const prevScrollHeight = container.scrollHeight;
+
+      const oldComments = await commentService.getLastComments(lastCommentId);
+      if (oldComments.length == 0) {
+        setHasMore(false);
+        return;
+      }
+      oldComments.reverse();
+      setComments((comments) => [...oldComments, ...comments]);
+      setLastCommentId(oldComments[0]._id);
+
+      requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight - prevScrollHeight;
+      });
+    }
+  };
+
   return (
     <div className="w-full max-w-1/3 p-8">
       <div className="bg-gray-200 rounded-xl h-4/5 m-2">
-        <div className="space-y-2 p-4 min-h-7/8">
+        <div
+          className="space-y-2 p-4 min-h-7/8 overflow-y-auto h-64"
+          ref={scrollRef}
+          onScrollEnd={handleScroll}
+        >
           {comments.map((new_comment) => (
             <div key={new_comment._id} className="text-black p-2 bg-gray-200">
               <span className="flex">

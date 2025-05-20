@@ -17,6 +17,34 @@ const postComment = async (comment) => {
   }
 };
 
-const commentService = { postComment };
+const getComments = async () => {
+  const response = await fetch(url, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    return await response.json();
+  } else {
+    console.log("failure");
+    return [];
+  }
+};
+
+const getLastComments = async (id) => {
+  const response = await fetch(url + `?beforeId=${id}`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    return await response.json();
+  } else {
+    console.log("failure");
+    return [];
+  }
+};
+
+const commentService = { postComment, getComments, getLastComments };
 
 export default commentService;
