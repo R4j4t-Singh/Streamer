@@ -8,7 +8,7 @@ const getUser = async () => {
 
   if (response.ok) {
     const data = await response.json();
-    return data.user;
+    return data.data.user;
   } else {
     return null;
   }

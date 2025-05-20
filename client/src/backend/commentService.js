@@ -24,7 +24,8 @@ const getComments = async () => {
   });
 
   if (response.ok) {
-    return await response.json();
+    const data = await response.json();
+    return data.data.comments;
   } else {
     console.log("failure");
     return [];
@@ -38,7 +39,8 @@ const getLastComments = async (id) => {
   });
 
   if (response.ok) {
-    return await response.json();
+    const data = await response.json();
+    return data.data.comments;
   } else {
     console.log("failure");
     return [];
