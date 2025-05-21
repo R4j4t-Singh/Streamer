@@ -5,12 +5,17 @@ const setUpSocket = (io) => {
 
   io.on("connection", (socket) => {
     console.log("connected");
+
+    socket.on("join-room", (roomId) => {
+      socket.join(roomId);
+      console.log(`User joined ${roomId}`);
+    });
   });
 };
 
-const emitComment = (comment) => {
+const emitComment = (streamId, comment) => {
   if (ioRef) {
-    ioRef.emit("new-comment", comment);
+    ioRef.to(streamId).emit("new-comment", comment);
   }
 };
 

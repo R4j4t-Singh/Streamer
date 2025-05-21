@@ -110,7 +110,7 @@ const getComments = asyncHandler(async (req, res) => {
         stream: data.streamId,
       });
 
-      emitComment(savedComment);
+      emitComment(data.streamId, savedComment);
     },
   });
 })();
