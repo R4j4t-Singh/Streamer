@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import commentService from "../backend/commentService";
 import { useRef } from "react";
-
-const socket = io("http://localhost:3000");
+import socket from "../socket";
 
 function CommentBox({ streamId }) {
   const [comments, setComments] = useState([]);
