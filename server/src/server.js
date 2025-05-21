@@ -35,9 +35,9 @@ setUpSocket(io);
 
 //Routes
 import authRouter from "./routes/authRoute.js";
-import commentRouter from "./routes/commentRoute.js";
+import streamRouter from "./routes/streamRoute.js";
 
 app.use("/api/auth", authRouter);
-app.use("/api/comment", commentRouter);
+app.use("/api/stream", streamRouter);
 
 export default server;

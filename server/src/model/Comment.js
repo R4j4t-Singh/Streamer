@@ -5,6 +5,7 @@ const commentSchema = new mongoose.Schema(
     comment: String,
     userId: String,
     userName: String,
+    stream: { type: mongoose.Schema.Types.ObjectId, ref: "Stream" },
   },
   {
     timestamps: true,

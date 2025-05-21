@@ -5,6 +5,7 @@ import Comment from "../model/Comment.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
+import Stream from "../model/Stream.js";
 
 const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: "user-group" });
@@ -12,6 +13,18 @@ const consumer = kafka.consumer({ groupId: "user-group" });
 await connectDB();
 
 const postComment = asyncHandler(async (req, res) => {
+  const { streamId } = req.params;
+
+  if (!streamId) {
+    throw new ApiError(400, "StreamId is required");
+  }
+
+  const stream = await Stream.findById(streamId);
+
+  if (!stream) {
+    throw new ApiError(404, "Stream not found");
+  }
+
   const { comment } = req.body;
 
   if (!comment || comment.trim() === "") {
@@ -22,6 +35,7 @@ const postComment = asyncHandler(async (req, res) => {
     comment,
     userId: req.userId,
     userName: req.userName,
+    streamId,
   };
 
   // kafka producer
@@ -41,16 +55,32 @@ const postComment = asyncHandler(async (req, res) => {
 
 const getComments = asyncHandler(async (req, res) => {
   const beforeId = req.query?.beforeId;
+  const { streamId } = req.params;
+
+  if (!streamId) {
+    throw new ApiError(400, "StreamId is required");
+  }
+
+  const stream = await Stream.findById(streamId);
+
+  if (!stream) {
+    throw new ApiError(404, "Stream not found");
+  }
 
   let comments;
   if (beforeId) {
     comments = await Comment.find({
       _id: { $lt: beforeId },
+      stream: { $eq: stream },
     })
       .sort({ _id: -1 })
       .limit(20);
   } else {
-    comments = comments = await Comment.find().sort({ _id: -1 }).limit(10);
+    comments = comments = await Comment.find({
+      stream: { $eq: stream },
+    })
+      .sort({ _id: -1 })
+      .limit(10);
   }
   return res.status(200).json(
     new ApiResponse(
@@ -77,6 +107,7 @@ const getComments = asyncHandler(async (req, res) => {
         comment: data.comment,
         userId: data.userId,
         userName: data.userName,
+        stream: data.streamId,
       });
 
       emitComment(savedComment);
