@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function VideoPlayer() {
+function VideoPlayer({ streamId }) {
   const [url, setUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState(
     "https://videos.pexels.com/video-files/6685367/6685367-hd_1920_1080_30fps.mp4"

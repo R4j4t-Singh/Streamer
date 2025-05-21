@@ -5,7 +5,7 @@ import { useRef } from "react";
 
 const socket = io("http://localhost:3000");
 
-function CommentBox() {
+function CommentBox({ streamId }) {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const scrollRef = useRef(null);
@@ -14,7 +14,7 @@ function CommentBox() {
 
   useEffect(() => {
     (async () => {
-      const oldComments = await commentService.getComments();
+      const oldComments = await commentService.getComments(streamId);
       oldComments.reverse();
       setComments(oldComments);
 
@@ -42,7 +42,7 @@ function CommentBox() {
 
   const postComment = async (event) => {
     event.preventDefault();
-    const status = await commentService.postComment(comment);
+    const status = await commentService.postComment(streamId, comment);
     console.log(status);
     setComment("");
   };
@@ -64,7 +64,10 @@ function CommentBox() {
     if (container.scrollTop < 50) {
       const prevScrollHeight = container.scrollHeight;
 
-      const oldComments = await commentService.getLastComments(lastCommentId);
+      const oldComments = await commentService.getLastComments(
+        streamId,
+        lastCommentId
+      );
       if (oldComments.length == 0) {
         setHasMore(false);
         return;

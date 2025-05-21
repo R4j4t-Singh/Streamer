@@ -1,7 +1,7 @@
-const url = "http://localhost:3000/api/comment";
+const url = "http://localhost:3000/api/stream/";
 
-const postComment = async (comment) => {
-  const response = await fetch(url, {
+const postComment = async (streamId, comment) => {
+  const response = await fetch(url + streamId + "/comments", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
@@ -17,8 +17,8 @@ const postComment = async (comment) => {
   }
 };
 
-const getComments = async () => {
-  const response = await fetch(url, {
+const getComments = async (streamId) => {
+  const response = await fetch(url + streamId + "/comments", {
     method: "GET",
     credentials: "include",
   });
@@ -32,11 +32,14 @@ const getComments = async () => {
   }
 };
 
-const getLastComments = async (id) => {
-  const response = await fetch(url + `?beforeId=${id}`, {
-    method: "GET",
-    credentials: "include",
-  });
+const getLastComments = async (streamId, id) => {
+  const response = await fetch(
+    url + streamId + "/comments" + `?beforeId=${id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
 
   if (response.ok) {
     const data = await response.json();
