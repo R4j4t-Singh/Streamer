@@ -26,4 +26,28 @@ const createStream = asyncHandler(async (req, res) => {
   );
 });
 
-export { createStream };
+const getStream = asyncHandler(async (req, res) => {
+  const { streamId } = req.params;
+
+  if (!streamId) {
+    throw new ApiError(400, "StreamId is required");
+  }
+
+  const stream = await Stream.findById(streamId);
+
+  if (!stream) {
+    throw new ApiError(404, "Stream not found");
+  }
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        stream,
+      },
+      "Stream data fetched successfully"
+    )
+  );
+});
+
+export { createStream, getStream };
