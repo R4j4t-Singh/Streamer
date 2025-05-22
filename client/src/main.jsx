@@ -8,7 +8,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { Home, Login, Stream } from "./pages";
+import { Home, Stream } from "./pages";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 
@@ -17,7 +17,6 @@ const router = createBrowserRouter(
     <Route path="/" element=<App />>
       <Route path="" element=<Home /> />
       <Route path="/stream/:streamId" element=<Stream /> />
-      <Route path="/login" element=<Login /> />
     </Route>
   )
 );

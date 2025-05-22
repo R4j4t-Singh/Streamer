@@ -12,7 +12,7 @@ function Stream() {
   }, []);
 
   return (
-    <div className="bg-gray-700 min-h-screen flex justify-between">
+    <div className="bg-gray-700 min-h-screen flex justify-between pt-15">
       <VideoPlayer streamId={streamId} />
       <CommentBox streamId={streamId} />
     </div>

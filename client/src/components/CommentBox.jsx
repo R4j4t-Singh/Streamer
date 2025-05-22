@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import commentService from "../backend/commentService";
 import { useRef } from "react";
+import { useSelector } from "react-redux";
 import socket from "../socket";
 
 function CommentBox({ streamId }) {
@@ -10,6 +11,9 @@ function CommentBox({ streamId }) {
   const scrollRef = useRef(null);
   const [lastCommentId, setLastCommentId] = useState("");
   const [hasMore, setHasMore] = useState(true);
+  const authStaus = useSelector((state) => state.authReducer.user)
+    ? true
+    : false;
 
   useEffect(() => {
     (async () => {
@@ -83,6 +87,7 @@ function CommentBox({ streamId }) {
 
   return (
     <div className="w-full max-w-1/3 p-8">
+      <h2 className="text-center text-gray-200 text-3xl p-2">My Title</h2>
       <div className="bg-gray-200 rounded-xl h-4/5 m-2">
         <div
           className="space-y-2 p-4 min-h-7/8 overflow-y-auto h-64"
@@ -112,7 +117,11 @@ function CommentBox({ streamId }) {
               setComment(event.target.value);
             }}
           />
-          <button type="submit" className="p-2 bg-blue-500 mx-2 rounded">
+          <button
+            type="submit"
+            className="p-2 bg-blue-500 mx-2 rounded"
+            disabled={!authStaus}
+          >
             Post
           </button>
         </form>

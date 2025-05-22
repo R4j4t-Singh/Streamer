@@ -7,7 +7,7 @@ const login = async () => {
 function Login() {
   return (
     <button
-      className="bg-blue-600 px-4 py-2 rounded text-white hover:bg-blue-700"
+      className="bg-blue-600 px-3 py-2 rounded text-white hover:bg-blue-700"
       onClick={login}
     >
       Login with Google

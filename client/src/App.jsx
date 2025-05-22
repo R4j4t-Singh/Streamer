@@ -18,7 +18,6 @@ function App() {
         dispatch(setUser(user));
       } else {
         dispatch(resetUser());
-        navigate("/login");
       }
     })();
   }, []);
