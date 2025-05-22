@@ -22,6 +22,21 @@ const createStream = async (title) => {
   }
 };
 
-const streamService = { createStream };
+const getStream = async (streamId) => {
+  const response = await fetch(url + "/" + streamId, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    return data.data.stream;
+  } else {
+    console.log("Error while fetching stream");
+    return null;
+  }
+};
+
+const streamService = { createStream, getStream };
 
 export default streamService;

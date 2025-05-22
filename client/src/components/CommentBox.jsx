@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import commentService from "../backend/commentService";
+import streamService from "../backend/streamService";
 import { useRef } from "react";
 import { useSelector } from "react-redux";
 import socket from "../socket";
@@ -11,6 +12,7 @@ function CommentBox({ streamId }) {
   const scrollRef = useRef(null);
   const [lastCommentId, setLastCommentId] = useState("");
   const [hasMore, setHasMore] = useState(true);
+  const [stream, setStream] = useState(null);
   const authStaus = useSelector((state) => state.authReducer.user)
     ? true
     : false;
@@ -37,6 +39,13 @@ function CommentBox({ streamId }) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       });
     });
+
+    (async () => {
+      const stream = await streamService.getStream(streamId);
+      if (stream) {
+        setStream(stream);
+      }
+    })();
 
     return () => {
       socket.off("new-comment");
@@ -87,7 +96,11 @@ function CommentBox({ streamId }) {
 
   return (
     <div className="w-full max-w-1/3 p-8">
-      <h2 className="text-center text-gray-200 text-3xl p-2">My Title</h2>
+      {stream && (
+        <h2 className="text-center text-gray-200 text-3xl p-2">
+          {stream.title}
+        </h2>
+      )}
       <div className="bg-gray-200 rounded-xl h-4/5 m-2">
         <div
           className="space-y-2 p-4 min-h-7/8 overflow-y-auto h-64"
