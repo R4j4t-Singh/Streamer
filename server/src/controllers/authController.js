@@ -26,7 +26,7 @@ const loginWithGoogle = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("sessionToken", sessionToken, cookieOptions)
-    .redirect("http://localhost:5173");
+    .redirect("http://localhost:5173/oauth-success");
 });
 
 const getUser = asyncHandler(async (req, res) => {

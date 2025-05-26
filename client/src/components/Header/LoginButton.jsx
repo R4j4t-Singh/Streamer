@@ -1,7 +1,16 @@
 import React from "react";
 
 const login = async () => {
-  window.location.href = "http://localhost:3000/api/auth/google";
+  const width = 400;
+  const height = 500;
+  const left = window.screen.width - width / 2;
+  const top = window.screen.height / 2 - height / 2;
+
+  const popup = window.open(
+    "http://localhost:3000/api/auth/google",
+    "OAuth Login",
+    `width=${width},height=${height},top=${top},left=${left}`
+  );
 };
 
 function Login() {
