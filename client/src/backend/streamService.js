@@ -37,6 +37,25 @@ const getStream = async (streamId) => {
   }
 };
 
-const streamService = { createStream, getStream };
+const updateVideo = async (streamId, videoUrl) => {
+  const response = await fetch(url + "/" + streamId + "/videos", {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      videoUrl: videoUrl,
+    }),
+  });
+  
+  if (response.ok) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const streamService = { createStream, getStream, updateVideo };
 
 export default streamService;

@@ -1,10 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import streamService from "../backend/streamService";
+import socket from "../socket";
 
 function VideoPlayer({ streamId }) {
   const [url, setUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState(
     "https://videos.pexels.com/video-files/6685367/6685367-hd_1920_1080_30fps.mp4"
   );
+
+  const updateVideo = async () => {
+    const response = await streamService.updateVideo(streamId, url);
+    if (response) {
+      setUrl("");
+      socket.emit("video-updated", streamId);
+    } else {
+      console.log("Error updating video");
+    }
+  };
+
+  const getStream = async () => {
+    const stream = await streamService.getStream(streamId);
+    if (stream.videoUrl) {
+      setVideoUrl(stream.videoUrl);
+    }
+  };
+
+  useEffect(() => {
+    getStream();
+
+    socket.on("video-updated", () => {
+      getStream();
+    });
+
+    return () => {
+      socket.off("video-updated");
+    };
+  }, []);
 
   return (
     <div className="p-8 justify-center w-full max-w-2/3">
@@ -28,7 +59,7 @@ function VideoPlayer({ streamId }) {
         <button
           className="bg-blue-500 rounded p-2"
           type="submit"
-          onClick={() => setVideoUrl(url)}
+          onClick={updateVideo}
         >
           Go
         </button>

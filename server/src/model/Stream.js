@@ -4,6 +4,7 @@ const streamSchema = new mongoose.Schema(
   {
     title: String,
     userId: String,
+    videoUrl: String,
   },
   {
     timestamps: true,

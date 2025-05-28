@@ -10,6 +10,10 @@ const setUpSocket = (io) => {
       socket.join(roomId);
       console.log(`User joined ${roomId}`);
     });
+
+    socket.on("video-updated", (roomId) => {
+      io.to(roomId).emit("video-updated");
+    });
   });
 };
 

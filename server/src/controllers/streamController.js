@@ -50,4 +50,24 @@ const getStream = asyncHandler(async (req, res) => {
   );
 });
 
-export { createStream, getStream };
+const updateVideo = asyncHandler(async (req, res) => {
+  const { streamId } = req.params;
+  const { videoUrl } = req.body;
+
+  if (!streamId) {
+    throw new ApiError(400, "StreamId is required");
+  }
+
+  const result = await Stream.updateOne(
+    { _id: { $eq: streamId } },
+    { $set: { videoUrl: videoUrl } }
+  );
+
+  if (result.modifiedCount === 0) {
+    throw new Error("No matching stream to update");
+  }
+
+  res.status(200).json(new ApiResponse(200, {}, "Video updated successfully"));
+});
+
+export { createStream, getStream, updateVideo };
