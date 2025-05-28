@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import streamService from "../backend/streamService";
 import socket from "../socket";
+import { useSelector } from "react-redux";
 
 function VideoPlayer({ streamId }) {
   const [url, setUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState(
     "https://videos.pexels.com/video-files/6685367/6685367-hd_1920_1080_30fps.mp4"
   );
+  const csrfToken = useSelector((state) => state.authReducer.csrfToken);
 
   const updateVideo = async () => {
-    const response = await streamService.updateVideo(streamId, url);
+    const response = await streamService.updateVideo(streamId, url, csrfToken);
     if (response) {
       setUrl("");
       socket.emit("video-updated", streamId);

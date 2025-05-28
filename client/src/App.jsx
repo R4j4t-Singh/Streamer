@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { VideoPlayer, CommentBox, Header } from "./components";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { resetUser, setUser } from "./store/authSlice";
+import { resetUser, setUser, setCsrfToken } from "./store/authSlice";
 import authService from "./backend/authService";
+import { getCSRFToken } from "./utils/csrf";
 
 function App() {
   const dispatch = useDispatch();
@@ -21,6 +22,9 @@ function App() {
 
   useEffect(() => {
     getUser();
+    getCSRFToken().then((token) => {
+      dispatch(setCsrfToken(token));
+    });
 
     window.addEventListener("message", (event) => {
       if (event.origin !== "http://localhost:5173") return;

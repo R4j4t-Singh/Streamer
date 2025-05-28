@@ -1,9 +1,12 @@
 const url = "http://localhost:3000/api/stream/";
 
-const postComment = async (streamId, comment) => {
+const postComment = async (streamId, comment, csrfToken) => {
   const response = await fetch(url + streamId + "/comments", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      "CSRF-Token": csrfToken,
+    },
     body: JSON.stringify({
       comment: comment,
     }),

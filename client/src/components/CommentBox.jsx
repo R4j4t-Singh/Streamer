@@ -16,6 +16,7 @@ function CommentBox({ streamId }) {
   const authStaus = useSelector((state) => state.authReducer.user)
     ? true
     : false;
+  const csrfToken = useSelector((state) => state.authReducer.csrfToken);
 
   useEffect(() => {
     (async () => {
@@ -54,7 +55,7 @@ function CommentBox({ streamId }) {
 
   const postComment = async (event) => {
     event.preventDefault();
-    const status = await commentService.postComment(streamId, comment);
+    const status = await commentService.postComment(streamId, comment, csrfToken);
     console.log(status);
     setComment("");
   };

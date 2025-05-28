@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
+  csrfToken: null,
 };
 
 const authSlice = createSlice({
@@ -15,9 +16,13 @@ const authSlice = createSlice({
     resetUser: (state, _) => {
       state.user = null;
     },
+
+    setCsrfToken: (state, action) => {
+      state.csrfToken = action.payload;
+    },
   },
 });
 
-export const { setUser, resetUser } = authSlice.actions;
+export const { setUser, resetUser, setCsrfToken } = authSlice.actions;
 
 export default authSlice.reducer;

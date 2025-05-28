@@ -5,6 +5,7 @@ import http from "http";
 import cors from "cors";
 import { setUpSocket } from "./socketHandler.js";
 import ratelimit from "express-rate-limit";
+import csurf from "csurf";
 
 const app = express();
 app.use(express.json());
@@ -20,6 +21,11 @@ app.use(
     windowMs: 2 * 60 * 1000,
     limit: 100,
     message: "Too many requests, please try again later.",
+  })
+);
+app.use(
+  csurf({
+    cookie: true,
   })
 );
 
@@ -39,5 +45,8 @@ import streamRouter from "./routes/streamRoute.js";
 
 app.use("/api/auth", authRouter);
 app.use("/api/stream", streamRouter);
+app.get("/api/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 
 export default server;

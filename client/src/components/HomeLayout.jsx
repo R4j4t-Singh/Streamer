@@ -9,9 +9,10 @@ function HomeLayout() {
   const authStaus = useSelector((state) => state.authReducer.user)
     ? true
     : false;
+  const csrfToken = useSelector((state) => state.authReducer.csrfToken);
 
   const createStream = async () => {
-    const streamId = await streamService.createStream(title);
+    const streamId = await streamService.createStream(title, csrfToken);
     if (streamId) {
       navigate(`/stream/${streamId}`);
     } else {

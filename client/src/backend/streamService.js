@@ -1,11 +1,12 @@
 const url = "http://localhost:3000/api/stream";
 
-const createStream = async (title) => {
+const createStream = async (title, csrfToken) => {
   const response = await fetch(url, {
     method: "POST",
     credentials: "include",
     headers: {
       "content-type": "application/json",
+      "CSRF-Token": csrfToken,
     },
     body: JSON.stringify({
       title,
@@ -37,12 +38,13 @@ const getStream = async (streamId) => {
   }
 };
 
-const updateVideo = async (streamId, videoUrl) => {
+const updateVideo = async (streamId, videoUrl, csrfToken) => {
   const response = await fetch(url + "/" + streamId + "/videos", {
     method: "PUT",
     credentials: "include",
     headers: {
       "content-type": "application/json",
+      "CSRF-Token": csrfToken,
     },
     body: JSON.stringify({
       videoUrl: videoUrl,
